@@ -15,7 +15,7 @@ func createUser(input RegisterInput) error {
 	user := User{
 		Email:     input.Email,
 		Name:      input.Name,
-		Password:  string(pwdHash),
+		password:  string(pwdHash),
 		CreatedAt: time.Time{},
 		Generated: 0,
 	}
@@ -28,5 +28,9 @@ func authenticate(email, password string) error {
 	if user == nil {
 		errors.New("no such user")
 	}
-	return bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+	return bcrypt.CompareHashAndPassword([]byte(user.password), []byte(password))
+}
+
+func getUser(email string) *User {
+	return collection.get(email)
 }

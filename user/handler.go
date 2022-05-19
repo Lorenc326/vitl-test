@@ -1,6 +1,7 @@
 package user
 
 import (
+	"github.com/Lorenc326/vitl-test/services/auth"
 	"github.com/Lorenc326/vitl-test/services/validator"
 	"github.com/labstack/echo/v4"
 	"log"
@@ -50,6 +51,15 @@ func Login(c echo.Context) error {
 	if err := authenticate(input.Email, input.Password); err != nil {
 		return echo.ErrBadRequest
 	}
+	c.SetCookie(auth.GetAuthCookie(input.Email))
 
+	return nil
+}
+
+func Details(c echo.Context) error {
+	email := c.Get("email") // preset by middleware
+	user := getUser(email.(string))
+	user.Email = "" // passport is not exported
+	c.JSON(200, user)
 	return nil
 }
