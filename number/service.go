@@ -2,7 +2,6 @@ package number
 
 import (
 	"github.com/Lorenc326/vitl-test/services/random"
-	"sort"
 )
 
 func countsForRandomSequence(order string, input *GenerateInput) (*[]int, error) {
@@ -14,29 +13,21 @@ func countsForRandomSequence(order string, input *GenerateInput) (*[]int, error)
 	if err != nil {
 		return nil, err
 	}
-	return countDuplicates(order, randomSequence), nil
+	return countDuplicates(order, randomSequence, input.FromNumber, input.ToNumber), nil
 }
 
-func countDuplicates(order string, set []int) *[]int {
-	counts := make(map[int]int)
-	uniqueNumbers := make([]int, 0)
-	for _, num := range set {
-		if counts[num] == 0 {
-			uniqueNumbers = append(uniqueNumbers, num)
-		}
-		counts[num]++
-	}
+func countDuplicates(order string, set []int, min, max int) *[]int {
+	counts := make([]int, max-min+1)
 
 	if order == "asc" {
-		sort.Sort(sort.IntSlice(uniqueNumbers))
+		for _, num := range set {
+			counts[num-min]++
+		}
 	} else {
-		sort.Sort(sort.Reverse(sort.IntSlice(uniqueNumbers)))
+		for _, num := range set {
+			counts[max-num]++
+		}
 	}
 
-	// replace number with its count
-	for i := 0; i < len(uniqueNumbers); i++ {
-		uniqueNumbers[i] = counts[uniqueNumbers[i]]
-	}
-
-	return &uniqueNumbers
+	return &counts
 }
