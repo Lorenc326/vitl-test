@@ -28,6 +28,7 @@ func Register(c echo.Context) error {
 	if err := createUser(input); err != nil {
 		return echo.ErrInternalServerError
 	}
+	c.SetCookie(auth.GetAuthCookie(input.Email))
 
 	return nil
 }

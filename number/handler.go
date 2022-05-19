@@ -2,6 +2,7 @@ package number
 
 import (
 	"github.com/Lorenc326/vitl-test/services/validator"
+	"github.com/Lorenc326/vitl-test/user"
 	"github.com/labstack/echo/v4"
 	"log"
 	"net/http"
@@ -37,5 +38,10 @@ func Generate(c echo.Context) error {
 		log.Println(err)
 		return echo.ErrInternalServerError
 	}
+	email := c.Get("email") // preset by middleware
+	if email != nil && email != "" {
+		user.IncrementGeneratedCounter(email.(string))
+	}
+
 	return c.JSON(200, counts)
 }

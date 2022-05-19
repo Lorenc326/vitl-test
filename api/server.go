@@ -13,12 +13,12 @@ func BuildServer() *echo.Echo {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
-	e.GET("/generate", number.Generate)
+	e.GET("/generate", number.Generate, Authorized)
 
 	e.POST("/register", user.Register)
 	e.POST("/login", user.Login)
 
-	e.GET("/details", user.Details, Authorized)
+	e.GET("/details", user.Details, Protected)
 
 	return e
 }

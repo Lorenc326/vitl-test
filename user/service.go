@@ -6,6 +6,11 @@ import (
 	"time"
 )
 
+func IncrementGeneratedCounter(email string) {
+	user := collection.get(email)
+	user.Generated++
+}
+
 func createUser(input RegisterInput) error {
 	pwdHash, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.MinCost)
 	if err != nil {
@@ -16,7 +21,7 @@ func createUser(input RegisterInput) error {
 		Email:     input.Email,
 		Name:      input.Name,
 		password:  string(pwdHash),
-		CreatedAt: time.Time{},
+		CreatedAt: time.Now(),
 		Generated: 0,
 	}
 	collection.save(input.Email, &user)
